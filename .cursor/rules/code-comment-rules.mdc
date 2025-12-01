@@ -1,0 +1,161 @@
+---
+alwaysApply: true
+---
+# Cursor Rules - Indonesian Documentation Style
+
+## Core Principles
+
+### Language and Tone
+- Bahasa Indonesia formal dengan ejaan baku (EYD)
+- Tone profesional, deskriptif, informatif
+- Kombinasi terminologi teknis (English) dengan penjelasan Indonesia
+- Contoh: "WebSocket connection", "message queue management"
+
+### Key Connectors
+- "yaitu:" untuk definisi/elaborasi
+- "antara lain:" untuk list/contoh
+- "dengan demikian," untuk kesimpulan
+- "yang mencakup" untuk detail komponen
+- "dimana" untuk kondisi/state
+- "serta" untuk info tambahan
+- "untuk" untuk purpose/tujuan
+
+## Code Comments Rules
+
+### Function/Method Comments
+```javascript
+/**
+ * [Penjelasan fungsi: tujuan dan behavior]
+ * dengan [detail implementasi atau approach]
+ *
+ * @param {Type} name - Penjelasan parameter
+ * @returns {Type} Penjelasan return dengan detail
+ */
+```
+
+### Inline Comments
+```javascript
+// Validasi input dengan checking type dan format
+// untuk memastikan data sesuai requirement
+
+// Enqueue ke Redis dengan priority routing dimana
+// critical task diproses terlebih dahulu
+```
+
+### Complex Logic Comments
+```javascript
+/**
+ * Mapping priority ke weight value untuk queue processing
+ * dimana critical = 1, high = 2, medium = 3, low = 4
+ * berdasarkan urgency level yang telah ditentukan
+ */
+```
+
+## Documentation Structure
+
+### README/Module Docs
+```
+# [Nama Module]
+
+## Overview
+[Module] merupakan [definisi] yang bertujuan untuk [tujuan], yaitu: [detail]
+
+## Prerequisites
+Komponen yang diperlukan, antara lain:
+- [Item] untuk [purpose]
+- [Item] sebagai [fungsi]
+
+## Quick Start
+### Installation
+### Configuration
+
+## Architecture
+Sistem mencakup beberapa komponen, yaitu:
+- **Component** - [fungsi/peran]
+
+## Core Logic
+Flow processing dilakukan melalui tahapan:
+1. **Step** - [penjelasan]
+2. **Step** - [penjelasan]
+
+## Features
+### [Feature Name]
+[Penjelasan lengkap dengan benefit dan approach]
+
+## API Reference (if applicable)
+
+## Testing
+
+## Troubleshooting
+### [Problem]
+[Solusi dengan verification steps]
+```
+
+## Writing Patterns
+
+### Opening Statement
+```
+[Subject] merupakan [definisi] yang bertujuan untuk [tujuan], yaitu: [detail spesifik]
+```
+
+### Bullet Points
+```
+- [Item] untuk [purpose/fungsi]
+- [Item] yang [detail]
+- [Item] dengan [implementasi]
+```
+
+### Technical Flow
+```
+Proses [X] dilakukan melalui tahapan sebagai berikut:
+1. **[Step]** - [penjelasan dengan detail]
+2. **[Step]** - [penjelasan dengan detail]
+```
+
+### Quantifiable Data
+```
+[metric] sebesar [angka]% berdasarkan [source/test]
+handling hingga [angka] [unit] dengan [kondisi]
+```
+
+## Examples
+
+### Good Comment
+```javascript
+/**
+ * Validasi dan normalize user input data
+ * dengan sanitization untuk mencegah XSS attack
+ * serta type checking untuk memastikan data integrity
+ *
+ * @param {Object} input - Raw input dari user form
+ * @returns {Object} Normalized data yang siap disimpan
+ */
+```
+
+### Good Inline Comment
+```javascript
+// Batch processing untuk optimasi performance dimana
+// setiap batch berisi maksimal 100 records
+const batchSize = 100;
+```
+
+### Good Module Overview
+```markdown
+## Overview
+
+Authentication Service merupakan sistem keamanan yang bertujuan untuk mengelola autentikasi user, yaitu: validasi credentials, generation JWT tokens, dan session management yang terintegrasi dengan Redis cache untuk performa optimal.
+```
+
+## Common Mistakes to Avoid
+- Komentar terlalu singkat (1-2 kata saja)
+- Tidak ada context atau explanation
+- Mix English-Indonesia dalam satu kata (salah: "me-migrate", benar: "melakukan migration")
+- Skip kata penghubung formal
+- Tidak deskriptif
+
+## Quick Checklist
+- [ ] Komentar deskriptif dan lengkap
+- [ ] Gunakan connector words (yaitu, antara lain, dengan demikian)
+- [ ] Include purpose/benefit dari code
+- [ ] Terminologi konsisten
+- [ ] Bahasa formal tapi jelas

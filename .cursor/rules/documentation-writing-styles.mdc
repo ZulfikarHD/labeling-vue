@@ -1,0 +1,181 @@
+---
+alwaysApply: false
+---
+# Cursor Rules - Indonesian Documentation Style
+
+## Overview
+Aturan penulisan ini bertujuan untuk memastikan konsistensi style dokumentasi dalam Bahasa Indonesia dengan pendekatan formal-profesional yang mencakup struktur sistematis, terminologi teknis-bisnis, dan format yang mudah dipahami oleh developer maupun stakeholder.
+
+## Core Principles
+
+### 1. Language and Tone
+- Gunakan Bahasa Indonesia formal dengan ejaan baku (EYD)
+- Tone profesional namun tetap deskriptif dan informatif
+- Hindari bahasa informal atau slang
+- Kombinasikan terminologi teknis (English) dengan penjelasan Bahasa Indonesia
+- Contoh: "WebSocket connection", "message queue management", "real-time monitoring"
+
+### 2. Sentence Structure
+- Gunakan kalimat panjang dan kompleks dengan banyak klausa
+- Gabungkan informasi detail dalam satu kalimat menggunakan koma
+- Gunakan kata penghubung formal: "yaitu:", "antara lain:", "dengan demikian,", "serta", "dimana", "yang mencakup"
+
+### 3. Documentation Structure Template
+
+Struktur dokumentasi mengikuti hierarki sebagai berikut:
+- Overview (penjelasan umum dengan format definisi-tujuan-detail)
+- Prerequisites (komponen yang diperlukan)
+- Quick Start (installation dan configuration)
+- Architecture (penjelasan layer dan komponen)
+- Core Logic (flow dan business logic)
+- Features (daftar fitur dengan penjelasan)
+- API Reference (jika applicable)
+- Testing
+- Troubleshooting
+- Performance Considerations
+- Future Improvements
+
+## Writing Rules
+
+### Rule 1: Opening Statements
+Selalu mulai section dengan kalimat pembuka yang mendefinisikan tujuan atau konteks menggunakan pattern: Subject + merupakan + definisi + yang bertujuan untuk + tujuan + yaitu: + detail spesifik
+
+Contoh: "Modul Notification Service merupakan implementasi sistem notifikasi real-time yang bertujuan untuk menyediakan layanan push notification kepada user, yaitu: supervisor dan operator produksi yang memerlukan informasi update status produksi secara instan."
+
+### Rule 2: Bullet Points Format
+Gunakan bullet points dengan setiap item lengkap dan deskriptif (bukan hanya satu kata), format: item + sebagai/untuk/yang + fungsi atau detail tambahan
+
+### Rule 3: Technical Explanation
+Saat menjelaskan logic atau flow teknis gunakan numbered steps dengan penjelasan detail per step, sertakan "yang mencakup" atau "dengan" untuk menambahkan informasi implementasi.
+
+### Rule 4: Code Comments
+Format komentar kode harus deskriptif dengan penjelasan tujuan, behavior, dan approach implementasi dalam Bahasa Indonesia formal.
+
+### Rule 5: Transitions and Connectors
+Gunakan connector phrases secara konsisten:
+- "yaitu:" untuk definisi atau elaborasi
+- "antara lain:" untuk memberikan list atau contoh
+- "dengan demikian," untuk kesimpulan atau summary
+- "yang mencakup" untuk detail komponen
+- "dimana" untuk penjelasan kondisi atau state
+- "serta" untuk menambahkan informasi setara
+- "berdasarkan" untuk referensi data atau hasil
+
+### Rule 6: Quantifiable Information
+Sertakan data kuantitatif ketika menjelaskan hasil, performa, atau dampak dengan format: angka + unit + konteks + berdasarkan/sebesar/dengan
+
+Contoh: "mengurangi delay time sebesar 40% berdasarkan hasil testing" atau "handling load hingga 10,000 concurrent connections"
+
+### Rule 7: Feature Description
+Setiap fitur dijelaskan dengan sub-heading yang diikuti penjelasan lengkap tentang fungsi, benefit, dan implementasi approach dalam 2-3 kalimat.
+
+### Rule 8: Prerequisites and Setup
+List prerequisites dengan detail versi dan fungsi, gunakan "untuk" menjelaskan purpose dari setiap dependency.
+
+### Rule 9: Troubleshooting Format
+Setiap troubleshooting item dimulai dengan problem statement (heading level 3) diikuti penjelasan solusi yang mencakup verification steps dan expected result.
+
+### Rule 10: Future Improvements
+List improvement plans dengan penjelasan singkat tentang expected benefit atau impact dari setiap enhancement yang direncanakan.
+
+## Examples
+
+### Example 1: Module Overview
+```
+# Authentication Service
+
+## Overview
+
+Modul Authentication Service merupakan komponen sistem keamanan yang bertujuan untuk mengelola proses autentikasi dan autorisasi user, yaitu: validasi credentials, generation JWT tokens, dan management user sessions yang terintegrasi dengan database PostgreSQL dan Redis cache untuk optimasi performa dan security yang robust.
+```
+
+### Example 2: Feature Description
+```
+### Token Refresh Mechanism
+
+Sistem refresh token dirancang untuk meningkatkan security dengan cara membatasi lifetime access token menjadi 15 menit, serta menyediakan refresh token dengan validity 7 hari yang dapat digunakan untuk generate access token baru tanpa memerlukan re-authentication dari user, dimana proses ini dilakukan secara otomatis oleh client SDK sebelum access token expired.
+```
+
+### Example 3: Code Comment
+```javascript
+/**
+ * Melakukan validasi JWT token dan extract payload user information
+ * dengan verifikasi signature menggunakan secret key dan checking expiration time
+ * untuk memastikan token masih valid dan belum di-revoke
+ *
+ * @param {string} token - JWT token dari authorization header
+ * @returns {Object} User payload yang mencakup userId, role, dan permissions
+ * @throws {TokenExpiredError} Jika token sudah expired
+ * @throws {InvalidTokenError} Jika signature tidak valid
+ */
+async function validateToken(token) {
+  // Implementation
+}
+```
+
+### Example 4: Architecture Explanation
+```
+## Architecture
+
+Sistem dibangun dengan arsitektur microservices yang mencakup beberapa komponen utama, antara lain:
+
+- **API Gateway** - Routing request ke service yang sesuai dengan load balancing
+- **Auth Service** - Handling authentication logic dan token management
+- **User Service** - Managing user data dan profile information
+- **Session Store** - Redis-based session management untuk fast access
+
+Dengan demikian, setiap service dapat di-scale secara independent sesuai dengan load dan requirements yang berbeda-beda untuk mencapai high availability dan fault tolerance.
+```
+
+### Example 5: Setup Instructions
+```
+## Quick Start
+
+### Installation
+
+Install dependencies yang diperlukan untuk menjalankan service, antara lain:
+
+\`\`\`bash
+npm install
+cp .env.example .env
+npm run migrate:up
+npm run dev
+\`\`\`
+
+### Environment Configuration
+
+Konfigurasi environment variables pada file `.env` dengan parameter sebagai berikut, dimana setiap parameter memiliki fungsi spesifik untuk operational service:
+
+\`\`\`env
+NODE_ENV=development
+DATABASE_URL=postgresql://user:pass@localhost:5432/db
+REDIS_URL=redis://localhost:6379
+JWT_SECRET=your_secret_key_here
+JWT_EXPIRY=15m
+REFRESH_TOKEN_EXPIRY=7d
+\`\`\`
+```
+
+## Common Mistakes to Avoid
+
+1. Jangan gunakan kalimat terlalu pendek atau bullet points yang hanya berisi 1-2 kata
+2. Hindari penggunaan "kita" atau "kami", gunakan passive voice atau "sistem", "modul", "service"
+3. Jangan skip context atau explanation, selalu berikan detail yang cukup
+4. Hindari redundansi kata tapi jangan terlalu singkat sampai kehilangan informasi
+5. Jangan mix English-Indonesian dalam satu kata (contoh salah: "me-migrate", benar: "melakukan migration")
+
+## Checklist
+
+Sebelum finalize dokumentasi, pastikan:
+- [ ] Setiap section dimulai dengan opening statement yang jelas
+- [ ] Menggunakan kata penghubung yang tepat (yaitu, antara lain, dengan demikian)
+- [ ] Bullet points deskriptif dan lengkap
+- [ ] Code comments dalam Bahasa Indonesia formal
+- [ ] Terminologi teknis konsisten (tidak berubah-ubah)
+- [ ] Kalimat kompleks tapi tetap mudah dipahami
+- [ ] Include quantifiable data jika ada
+- [ ] Structure mengikuti template yang ditentukan
+
+## Notes
+
+Dokumentasi ini bersifat fleksibel dan dapat disesuaikan dengan kebutuhan spesifik project, namun core principles dan writing rules harus tetap dipertahankan untuk menjaga konsistensi style across all documentation yang dibuat dalam codebase.

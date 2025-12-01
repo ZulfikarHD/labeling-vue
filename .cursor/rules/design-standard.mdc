@@ -1,0 +1,11 @@
+---
+alwaysApply: true
+---
+App Design is like Apple app
+### Use iOS Design Principles like
+- **Spring Physics**: Natural, bouncy animations yang terasa like native iOS
+- **Press Feedback**: Scale-down effect saat element di-tap (0.97 scale)
+- **Glass Effect**: Frosted glass navbar dan footer dengan backdrop blur
+- **Haptic Feedback**: Vibration API untuk tactile response
+- **Staggered Animations**: Sequential entrance animations untuk lists
+- **Gesture Recognition**: Swipe-to-delete, pull-to-refresh, drag-to-dismiss
