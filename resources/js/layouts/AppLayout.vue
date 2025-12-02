@@ -64,7 +64,7 @@ const currentYear = computed(() => new Date().getFullYear());
                             class="flex items-center gap-2 transition-transform duration-200 active:scale-[0.97]"
                         >
                             <div
-                                class="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 shadow-lg shadow-blue-500/25"
+                                class="flex h-9 w-9 items-center justify-center rounded-xl bg-linear-to-br from-blue-500 to-blue-600 shadow-lg shadow-blue-500/25"
                             >
                                 <Tag class="h-5 w-5 text-white" :stroke-width="2" />
                             </div>
