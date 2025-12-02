@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Head, Link, useForm, usePage } from '@inertiajs/vue3';
 import { onClickOutside, useToggle, useVibrate } from '@vueuse/core';
-import { LogOut, Menu, Tag, User, X } from 'lucide-vue-next';
+import { Building2, ChevronDown, Key, LogOut, Menu, Settings, ShieldCheck, Tag, User, Users, X } from 'lucide-vue-next';
 import { computed, ref } from 'vue';
 
 /**
@@ -43,6 +43,25 @@ const [isMobileMenuOpen, toggleMobileMenu] = useToggle(false);
 const [isUserMenuOpen, toggleUserMenu] = useToggle(false);
 
 /**
+ * VueUse useToggle untuk admin dropdown visibility
+ */
+const [isAdminMenuOpen, toggleAdminMenu] = useToggle(false);
+
+/**
+ * Ref untuk admin menu dropdown element
+ */
+const adminMenuRef = ref<HTMLElement | null>(null);
+
+/**
+ * VueUse onClickOutside untuk close admin menu
+ */
+onClickOutside(adminMenuRef, () => {
+    if (isAdminMenuOpen.value) {
+        isAdminMenuOpen.value = false;
+    }
+});
+
+/**
  * Ref untuk user menu dropdown element
  * digunakan untuk onClickOutside detection
  */
@@ -79,6 +98,11 @@ const user = computed(() => {
 });
 
 /**
+ * Computed property untuk check apakah user adalah admin
+ */
+const isAdmin = computed(() => user.value?.role === 'admin');
+
+/**
  * Form untuk logout request
  * menggunakan POST method untuk security
  */
@@ -98,6 +122,14 @@ function handleMobileMenuToggle(): void {
  */
 function handleUserMenuToggle(): void {
     toggleUserMenu();
+    vibrate();
+}
+
+/**
+ * Handle admin menu toggle dengan haptic feedback
+ */
+function handleAdminMenuToggle(): void {
+    toggleAdminMenu();
     vibrate();
 }
 
@@ -177,6 +209,63 @@ const currentYear = computed(() => new Date().getFullYear());
                         >
                             Labels
                         </Link>
+
+                        <!-- Admin Menu Dropdown -->
+                        <div v-if="isAdmin" ref="adminMenuRef" class="relative">
+                            <button
+                                type="button"
+                                class="flex items-center gap-1 rounded-lg px-4 py-2 text-sm font-medium text-gray-600 transition-all duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:bg-gray-100 hover:text-gray-900 active:scale-[0.97] dark:text-gray-300 dark:hover:bg-zinc-800 dark:hover:text-white"
+                                @click="handleAdminMenuToggle"
+                            >
+                                <ShieldCheck class="h-4 w-4" :stroke-width="2" />
+                                Admin
+                                <ChevronDown
+                                    class="h-4 w-4 transition-transform duration-200"
+                                    :class="{ 'rotate-180': isAdminMenuOpen }"
+                                    :stroke-width="2"
+                                />
+                            </button>
+
+                            <!-- Admin Dropdown -->
+                            <Transition
+                                enter-active-class="transition-all duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
+                                enter-from-class="opacity-0 scale-95 -translate-y-2"
+                                enter-to-class="opacity-100 scale-100 translate-y-0"
+                                leave-active-class="transition-all duration-150 ease-in"
+                                leave-from-class="opacity-100 scale-100 translate-y-0"
+                                leave-to-class="opacity-0 scale-95 -translate-y-2"
+                            >
+                                <div
+                                    v-if="isAdminMenuOpen"
+                                    class="absolute left-0 mt-2 w-52 origin-top-left rounded-xl border border-gray-200/50 bg-white/95 p-1 shadow-lg backdrop-blur-xl dark:border-zinc-700/50 dark:bg-zinc-800/95"
+                                >
+                                    <Link
+                                        href="/admin/users"
+                                        class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition-all duration-200 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-zinc-700 dark:hover:text-white"
+                                        @mousedown="onButtonPress"
+                                    >
+                                        <Users class="h-4 w-4" :stroke-width="2" />
+                                        Kelola User
+                                    </Link>
+                                    <Link
+                                        href="/admin/workstations"
+                                        class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition-all duration-200 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-zinc-700 dark:hover:text-white"
+                                        @mousedown="onButtonPress"
+                                    >
+                                        <Building2 class="h-4 w-4" :stroke-width="2" />
+                                        Kelola Workstation
+                                    </Link>
+                                    <Link
+                                        href="/admin/change-password"
+                                        class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition-all duration-200 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-zinc-700 dark:hover:text-white"
+                                        @mousedown="onButtonPress"
+                                    >
+                                        <Key class="h-4 w-4" :stroke-width="2" />
+                                        Ubah Password User
+                                    </Link>
+                                </div>
+                            </Transition>
+                        </div>
                     </nav>
 
                     <!-- User Menu Desktop dengan VueUse onClickOutside -->
@@ -211,12 +300,20 @@ const currentYear = computed(() => new Date().getFullYear());
                                     <div class="border-b border-gray-200/50 px-3 py-2 dark:border-zinc-700/50">
                                         <p class="text-sm font-medium text-gray-900 dark:text-white">{{ user.np }}</p>
                                         <p class="text-xs text-gray-500 capitalize dark:text-gray-400">
-                                            {{ user.role }}
+                                            {{ user.role === 'admin' ? 'Administrator' : 'Operator' }}
                                         </p>
                                     </div>
+                                    <Link
+                                        href="/profile"
+                                        class="mt-1 flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition-all duration-200 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-zinc-700 dark:hover:text-white"
+                                        @mousedown="onButtonPress"
+                                    >
+                                        <Settings class="h-4 w-4" :stroke-width="2" />
+                                        Pengaturan
+                                    </Link>
                                     <button
                                         type="button"
-                                        class="mt-1 flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-red-600 transition-all duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:bg-red-50 active:scale-[0.98] dark:text-red-400 dark:hover:bg-red-900/20"
+                                        class="flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-red-600 transition-all duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:bg-red-50 active:scale-[0.98] dark:text-red-400 dark:hover:bg-red-900/20"
                                         :disabled="logoutForm.processing"
                                         @click="handleLogout"
                                     >
@@ -309,21 +406,62 @@ const currentYear = computed(() => new Date().getFullYear());
                             Labels
                         </Link>
 
-                        <!-- Logout Button Mobile -->
-                        <button
-                            v-if="user"
-                            type="button"
-                            class="mt-2 flex items-center gap-2 rounded-lg border-t border-gray-200/50 px-4 py-3 text-sm font-medium text-red-600 transition-all duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:bg-red-50 active:scale-[0.98] dark:border-zinc-700/50 dark:text-red-400 dark:hover:bg-red-900/20"
-                            :disabled="logoutForm.processing"
-                            @click="handleLogout"
-                        >
-                            <LogOut class="h-4 w-4" :stroke-width="2" />
-                            {{ logoutForm.processing ? 'Keluar...' : 'Keluar' }}
-                        </button>
+                        <!-- Admin Menu Mobile -->
+                        <div v-if="isAdmin" class="mt-2 border-t border-gray-200/50 pt-2 dark:border-zinc-700/50">
+                            <p class="flex items-center gap-2 px-4 py-2 text-xs font-semibold tracking-wide text-gray-400 uppercase dark:text-gray-500">
+                                <ShieldCheck class="h-3.5 w-3.5" :stroke-width="2" />
+                                Admin
+                            </p>
+                            <Link
+                                href="/admin/users"
+                                class="flex items-center gap-2 rounded-lg px-4 py-3 text-sm font-medium text-gray-600 transition-all duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:bg-gray-100 active:scale-[0.98] dark:text-gray-300 dark:hover:bg-zinc-800"
+                                @mousedown="onButtonPress"
+                            >
+                                <Users class="h-4 w-4" :stroke-width="2" />
+                                Kelola User
+                            </Link>
+                            <Link
+                                href="/admin/workstations"
+                                class="flex items-center gap-2 rounded-lg px-4 py-3 text-sm font-medium text-gray-600 transition-all duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:bg-gray-100 active:scale-[0.98] dark:text-gray-300 dark:hover:bg-zinc-800"
+                                @mousedown="onButtonPress"
+                            >
+                                <Building2 class="h-4 w-4" :stroke-width="2" />
+                                Kelola Workstation
+                            </Link>
+                            <Link
+                                href="/admin/change-password"
+                                class="flex items-center gap-2 rounded-lg px-4 py-3 text-sm font-medium text-gray-600 transition-all duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:bg-gray-100 active:scale-[0.98] dark:text-gray-300 dark:hover:bg-zinc-800"
+                                @mousedown="onButtonPress"
+                            >
+                                <Key class="h-4 w-4" :stroke-width="2" />
+                                Ubah Password User
+                            </Link>
+                        </div>
+
+                        <!-- User Menu Mobile -->
+                        <div v-if="user" class="mt-2 border-t border-gray-200/50 pt-2 dark:border-zinc-700/50">
+                            <Link
+                                href="/profile"
+                                class="flex items-center gap-2 rounded-lg px-4 py-3 text-sm font-medium text-gray-600 transition-all duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:bg-gray-100 active:scale-[0.98] dark:text-gray-300 dark:hover:bg-zinc-800"
+                                @mousedown="onButtonPress"
+                            >
+                                <Settings class="h-4 w-4" :stroke-width="2" />
+                                Pengaturan
+                            </Link>
+                            <button
+                                type="button"
+                                class="flex w-full items-center gap-2 rounded-lg px-4 py-3 text-sm font-medium text-red-600 transition-all duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:bg-red-50 active:scale-[0.98] dark:text-red-400 dark:hover:bg-red-900/20"
+                                :disabled="logoutForm.processing"
+                                @click="handleLogout"
+                            >
+                                <LogOut class="h-4 w-4" :stroke-width="2" />
+                                {{ logoutForm.processing ? 'Keluar...' : 'Keluar' }}
+                            </button>
+                        </div>
 
                         <!-- Login Link Mobile -->
                         <Link
-                            v-else
+                            v-if="!user"
                             href="/login"
                             class="mt-2 rounded-lg bg-blue-500 px-4 py-3 text-center text-sm font-medium text-white transition-all duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:bg-blue-600 active:scale-[0.98]"
                             @mousedown="onButtonPress"

@@ -1,6 +1,11 @@
 <?php
 
+use App\Http\Controllers\Admin\ChangePasswordController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\WorkstationController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\PasswordController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -39,6 +44,14 @@ Route::middleware('auth')->group(function (): void {
 
     // Logout
     Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
+
+    // Profile
+    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Password
+    Route::put('/password', [PasswordController::class, 'update'])->name('password.update');
 });
 
 // ==================== ADMIN ROUTES ====================
@@ -47,7 +60,16 @@ Route::middleware('auth')->group(function (): void {
  * Routes khusus untuk admin dengan middleware admin
  * mencakup user management, workstation management, dll
  */
-Route::middleware(['auth', 'admin'])->group(function (): void {
-    // Placeholder untuk admin routes
-    // User management, workstation management akan ditambahkan di sprint berikutnya
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function (): void {
+    // User Management
+    Route::resource('users', UserController::class);
+
+    // Workstation Management
+    Route::patch('/workstations/{workstation}/toggle-active', [WorkstationController::class, 'toggleActive'])
+        ->name('workstations.toggle-active');
+    Route::resource('workstations', WorkstationController::class);
+
+    // Change Password (Admin)
+    Route::get('/change-password', [ChangePasswordController::class, 'index'])->name('change-password.index');
+    Route::post('/change-password', [ChangePasswordController::class, 'store'])->name('change-password.store');
 });

@@ -46,8 +46,8 @@ docs/
 │   ├── endpoints/
 │   │   ├── production-orders.md                       📝 Placeholder
 │   │   ├── labels.md                                  📝 Placeholder
-│   │   ├── users.md                                   📝 Placeholder
-│   │   ├── workstations.md                            📝 Placeholder
+│   │   ├── users.md                                   ✅ Complete user management API
+│   │   ├── workstations.md                            ✅ Complete workstation management API
 │   │   ├── monitoring.md                              📝 Placeholder
 │   │   ├── reports.md                                 📝 Placeholder
 │   │   └── sirine-api.md                              📝 Placeholder
@@ -56,7 +56,7 @@ docs/
 │
 ├── 06-user-guides/
 │   ├── user-manual.md                                 📝 Placeholder
-│   ├── admin-guide.md                                 📝 Placeholder
+│   ├── admin-guide.md                                 ✅ Complete admin guide
 │   ├── operator-guide.md                              📝 Placeholder
 │   ├── quick-start.md                                 📝 Placeholder
 │   ├── faq.md                                         📝 Placeholder
@@ -73,6 +73,7 @@ docs/
 │   ├── test-plan.md                                   📝 Placeholder
 │   ├── test-cases/
 │   │   ├── authentication-tests.md                    ✅ Complete auth test cases
+│   │   ├── user-management-tests.md                   ✅ Complete user management tests
 │   │   ├── label-generation-tests.md                  📝 Placeholder
 │   │   ├── order-processing-tests.md                  📝 Placeholder
 │   │   ├── printing-tests.md                          📝 Placeholder
@@ -105,7 +106,7 @@ docs/
 - 📝 **Placeholder**: File created with title, ready to be filled
 - 📁 **Empty Directory**: Directory created with .gitkeep
 
-## Completed Files (7 files with full content)
+## Completed Files (11 files with full content)
 
 1. **docs/README.md** - Main documentation index dengan quick links, tech stack overview, dan navigation
 2. **docs/01-project-overview/project-charter.md** - Complete project charter dengan goals, scope, stakeholders, timeline, risks
@@ -113,7 +114,11 @@ docs/
 4. **docs/02-requirements/business-rules.md** - Critical business rules dengan formulas, order types, processing priority
 5. **docs/03-design/ui-ux/design-system.md** - iOS design principles, VueUse utilities, component patterns
 6. **docs/05-api-documentation/authentication.md** - Authentication API: routes, controllers, middleware, validation
-7. **docs/08-testing/test-cases/authentication-tests.md** - Authentication test cases dengan 25 test scenarios
+7. **docs/05-api-documentation/endpoints/users.md** - User management API: CRUD, change password, validation
+8. **docs/05-api-documentation/endpoints/workstations.md** - Workstation management API: CRUD, toggle status
+9. **docs/06-user-guides/admin-guide.md** - Admin guide: user management, workstation management, best practices
+10. **docs/08-testing/test-cases/authentication-tests.md** - Authentication test cases dengan 25 test scenarios
+11. **docs/08-testing/test-cases/user-management-tests.md** - User management test cases dengan 35 test scenarios
 
 ## Next Steps
 
@@ -144,9 +149,9 @@ docs/
 ## Statistics
 
 - **Total Directories**: 26
-- **Total Markdown Files**: 64
-- **Completed Files**: 7 (10.9%)
-- **Placeholder Files**: 57 (89.1%)
+- **Total Markdown Files**: 65
+- **Completed Files**: 11 (16.9%)
+- **Placeholder Files**: 54 (83.1%)
 - **Empty Asset Directories**: 10
 
 ## Maintenance
