@@ -25,6 +25,8 @@
         "vue-tsc": "^2.2.4"
     },
     "dependencies": {
+        "@fontsource-variable/nunito": "^5.2.7",
+        "@fontsource-variable/quicksand": "^5.2.10",
         "@inertiajs/vue3": "^2.0.0",
         "@tailwindcss/vite": "^4.1.11",
         "@vitejs/plugin-vue": "^6.0.0",
@@ -33,6 +35,7 @@
         "clsx": "^2.1.1",
         "concurrently": "^9.0.1",
         "laravel-vite-plugin": "^2.0.0",
+        "lucide-vue-next": "^0.555.0",
         "tailwind-merge": "^3.2.0",
         "tailwindcss": "^4.1.1",
         "typescript": "^5.2.2",

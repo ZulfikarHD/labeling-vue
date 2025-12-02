@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Head, Link } from '@inertiajs/vue3';
+import { Menu, Tag, X } from 'lucide-vue-next';
 import { computed, ref } from 'vue';
 
 /**
@@ -65,22 +66,9 @@ const currentYear = computed(() => new Date().getFullYear());
                             <div
                                 class="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-br from-blue-500 to-blue-600 shadow-lg shadow-blue-500/25"
                             >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    class="h-5 w-5 text-white"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    stroke-width="2"
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                >
-                                    <path d="M9 5H2v7l6.29 6.29c.94.94 2.48.94 3.42 0l3.58-3.58c.94-.94.94-2.48 0-3.42L9 5Z" />
-                                    <path d="M6 9.01V9" />
-                                    <path d="m15 5 6.3 6.3a2.4 2.4 0 0 1 0 3.4L17 19" />
-                                </svg>
+                                <Tag class="h-5 w-5 text-white" :stroke-width="2" />
                             </div>
-                            <span class="text-lg font-semibold text-gray-900 dark:text-white">
+                            <span class="font-display text-lg font-semibold text-gray-900 dark:text-white">
                                 Label Generator
                             </span>
                         </Link>
@@ -114,28 +102,8 @@ const currentYear = computed(() => new Date().getFullYear());
                         class="rounded-lg p-2 text-gray-500 transition-all duration-200 hover:bg-gray-100 active:scale-[0.97] md:hidden dark:text-gray-400 dark:hover:bg-zinc-800"
                         @click="toggleMobileMenu"
                     >
-                        <svg
-                            v-if="!isMobileMenuOpen"
-                            xmlns="http://www.w3.org/2000/svg"
-                            class="h-6 w-6"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                            stroke-width="2"
-                        >
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-                        </svg>
-                        <svg
-                            v-else
-                            xmlns="http://www.w3.org/2000/svg"
-                            class="h-6 w-6"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                            stroke-width="2"
-                        >
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
+                        <Menu v-if="!isMobileMenuOpen" class="h-6 w-6" :stroke-width="2" />
+                        <X v-else class="h-6 w-6" :stroke-width="2" />
                     </button>
                 </div>
             </div>

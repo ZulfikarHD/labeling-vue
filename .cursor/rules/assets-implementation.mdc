@@ -1,0 +1,5 @@
+---
+alwaysApply: true
+---
+- for icon use lucide-vue icon
+- for this app dont use any online resources, made it using yarn package for offline as possible.
