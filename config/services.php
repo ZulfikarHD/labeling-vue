@@ -35,4 +35,18 @@ return [
         ],
     ],
 
+    /*
+    |--------------------------------------------------------------------------
+    | SIRINE API Configuration
+    |--------------------------------------------------------------------------
+    |
+    | Konfigurasi untuk koneksi ke SIRINE API yang digunakan untuk fetch
+    | product specifications. SIRINE merupakan sistem eksternal yang menyimpan
+    | data spesifikasi produk seperti detail order dan OBC number.
+    |
+    */
+    'sirine' => [
+        'url' => env('SIRINE_API_URL', 'https://sirine.peruri.co.id/sirine/api'),
+    ],
+
 ];

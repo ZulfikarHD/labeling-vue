@@ -160,31 +160,13 @@ SIRINE_API_URL=https://sirine.peruri.co.id/sirine/api
 ### Expected API Response (Regular/PCHT)
 
 ```json
-{
-    "no_po": 2024120100001,
-    "no_obc": "OBC-2024-001",
-    "type": "Pita Cukai HT",
-    "seri": "A",
-    "rencet": "001",
-    "mesin": "M-01",
-    "jml_lembar": 5000,
-    "tgl_order": "2024-12-01",
-    // ... other fields
-}
+{"no_po":3000277761,"no_obc":"PST410127","jenis":"P","tgl_obc":"2025-11-10","tgl_jt":"2025-11-28","tgl_bb":"2025-11-28","tgl_cetak":"2025-12-01","tgl_verif":"2025-12-01","tgl_kemas":"2025-12-01","jml_order":3300,"rencet":86,"jml_bb":0,"jml_cd":86,"total_cd":86,"jml_cetak":86,"hcs_verif":80,"hcts_verif":6,"hcs_sisa":0,"total_hcts":6,"kemas":80,"kirim":0,"status":"-","mesin":"TGN-1002","desain":2025,"created_at":"2025-12-02T01:04:58.000000Z","updated_at":"2025-12-02T01:04:58.000000Z","gilir_cetak":null}
 ```
 
 ### Expected API Response (MMEA)
 
 ```json
-{
-    "no_po": 2024120100002,
-    "no_obc": "OBC-MMEA-001",
-    "type": "MMEA Label",
-    "seri": "B",
-    "lbr_kemas": 500,
-    "jml_rim": 10,
-    // ... other fields
-}
+{"no_po":3000276764,"no_obc":"DEN235380","jenis":"HPTL","tgl_obc":"2025-11-11","tgl_jt":"2025-12-01","tgl_bb":"2025-11-28","tgl_cetak":"2025-11-28","tgl_verif":"2025-12-01","tgl_kemas":null,"jml_order":500,"rencet":520,"jml_bb":0,"jml_cd":520,"total_cd":520,"jml_cetak":520,"hcs_verif":511,"hcts_verif":9,"hcs_sisa":0,"total_hcts":9,"kemas":0,"kirim":0,"status":"ZP03","mesin":"TGN-1001","desain":2025,"created_at":"2025-11-11T07:49:51.000000Z","updated_at":"2025-12-01T15:13:55.000000Z","gilir_cetak":null}
 ```
 
 ### Parsed Structure
