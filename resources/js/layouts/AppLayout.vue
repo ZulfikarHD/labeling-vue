@@ -1,7 +1,18 @@
 <script setup lang="ts">
-import { Head, Link } from '@inertiajs/vue3';
-import { Menu, Tag, X } from 'lucide-vue-next';
+import { Head, Link, useForm, usePage } from '@inertiajs/vue3';
+import { onClickOutside, useToggle, useVibrate } from '@vueuse/core';
+import { LogOut, Menu, Tag, User, X } from 'lucide-vue-next';
 import { computed, ref } from 'vue';
+
+/**
+ * Interface untuk user data dari shared props
+ */
+interface AuthUser {
+    id: number;
+    np: string;
+    name: string | null;
+    role: string;
+}
 
 /**
  * Props untuk AppLayout component
@@ -21,22 +32,90 @@ withDefaults(
 );
 
 /**
- * State untuk mobile menu visibility
- * dengan spring animation saat toggle
+ * VueUse useToggle untuk mobile menu visibility
+ * dengan cleaner API dibanding manual ref toggle
  */
-const isMobileMenuOpen = ref(false);
+const [isMobileMenuOpen, toggleMobileMenu] = useToggle(false);
 
 /**
- * Toggle mobile menu dengan haptic feedback
+ * VueUse useToggle untuk user dropdown visibility
+ */
+const [isUserMenuOpen, toggleUserMenu] = useToggle(false);
+
+/**
+ * Ref untuk user menu dropdown element
+ * digunakan untuk onClickOutside detection
+ */
+const userMenuRef = ref<HTMLElement | null>(null);
+
+/**
+ * VueUse onClickOutside untuk close user menu
+ * saat klik di luar dropdown
+ */
+onClickOutside(userMenuRef, () => {
+    if (isUserMenuOpen.value) {
+        isUserMenuOpen.value = false;
+    }
+});
+
+/**
+ * VueUse useVibrate untuk haptic feedback
+ * memberikan tactile response seperti native iOS
+ */
+const { vibrate } = useVibrate({ pattern: [10] });
+
+/**
+ * Haptic feedback pattern untuk logout confirmation
+ */
+const { vibrate: vibrateConfirm } = useVibrate({ pattern: [10, 50, 10] });
+
+/**
+ * Computed property untuk user data dari Inertia shared props
+ * yang berisi informasi user yang sedang login
+ */
+const user = computed(() => {
+    const page = usePage();
+    return page.props.auth?.user as AuthUser | null;
+});
+
+/**
+ * Form untuk logout request
+ * menggunakan POST method untuk security
+ */
+const logoutForm = useForm({});
+
+/**
+ * Handle mobile menu toggle dengan haptic feedback
  * untuk memberikan tactile response seperti native iOS
  */
-function toggleMobileMenu(): void {
-    isMobileMenuOpen.value = !isMobileMenuOpen.value;
+function handleMobileMenuToggle(): void {
+    toggleMobileMenu();
+    vibrate();
+}
 
-    // Haptic feedback jika tersedia
-    if ('vibrate' in navigator) {
-        navigator.vibrate(10);
-    }
+/**
+ * Handle user menu toggle dengan haptic feedback
+ */
+function handleUserMenuToggle(): void {
+    toggleUserMenu();
+    vibrate();
+}
+
+/**
+ * Handle logout dengan POST request
+ * dan haptic feedback untuk confirmation
+ */
+function handleLogout(): void {
+    vibrateConfirm();
+    logoutForm.post('/logout');
+}
+
+/**
+ * Haptic feedback untuk button press
+ * mengikuti iOS press feedback pattern
+ */
+function onButtonPress(): void {
+    vibrate();
 }
 
 /**
@@ -57,14 +136,15 @@ const currentYear = computed(() => new Date().getFullYear());
         >
             <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                 <div class="flex h-16 items-center justify-between">
-                    <!-- Logo dan Brand -->
+                    <!-- Logo dan Brand dengan Press Feedback -->
                     <div class="flex items-center gap-3">
                         <Link
                             href="/"
-                            class="flex items-center gap-2 transition-transform duration-200 active:scale-[0.97]"
+                            class="flex items-center gap-2 transition-all duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] active:scale-[0.97]"
+                            @mousedown="onButtonPress"
                         >
                             <div
-                                class="flex h-9 w-9 items-center justify-center rounded-xl bg-linear-to-br from-blue-500 to-blue-600 shadow-lg shadow-blue-500/25"
+                                class="flex h-9 w-9 items-center justify-center rounded-xl bg-linear-to-br from-blue-500 to-blue-600 shadow-lg shadow-blue-500/25 transition-transform duration-200 active:scale-95"
                             >
                                 <Tag class="h-5 w-5 text-white" :stroke-width="2" />
                             </div>
@@ -74,36 +154,106 @@ const currentYear = computed(() => new Date().getFullYear());
                         </Link>
                     </div>
 
-                    <!-- Navigation Desktop -->
+                    <!-- Navigation Desktop dengan Press Feedback -->
                     <nav class="hidden items-center gap-1 md:flex">
                         <Link
                             href="/"
-                            class="rounded-lg px-4 py-2 text-sm font-medium text-gray-600 transition-all duration-200 hover:bg-gray-100 hover:text-gray-900 active:scale-[0.97] dark:text-gray-300 dark:hover:bg-zinc-800 dark:hover:text-white"
+                            class="rounded-lg px-4 py-2 text-sm font-medium text-gray-600 transition-all duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:bg-gray-100 hover:text-gray-900 active:scale-[0.97] dark:text-gray-300 dark:hover:bg-zinc-800 dark:hover:text-white"
+                            @mousedown="onButtonPress"
                         >
                             Dashboard
                         </Link>
                         <Link
                             href="/"
-                            class="rounded-lg px-4 py-2 text-sm font-medium text-gray-600 transition-all duration-200 hover:bg-gray-100 hover:text-gray-900 active:scale-[0.97] dark:text-gray-300 dark:hover:bg-zinc-800 dark:hover:text-white"
+                            class="rounded-lg px-4 py-2 text-sm font-medium text-gray-600 transition-all duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:bg-gray-100 hover:text-gray-900 active:scale-[0.97] dark:text-gray-300 dark:hover:bg-zinc-800 dark:hover:text-white"
+                            @mousedown="onButtonPress"
                         >
                             Orders
                         </Link>
                         <Link
                             href="/"
-                            class="rounded-lg px-4 py-2 text-sm font-medium text-gray-600 transition-all duration-200 hover:bg-gray-100 hover:text-gray-900 active:scale-[0.97] dark:text-gray-300 dark:hover:bg-zinc-800 dark:hover:text-white"
+                            class="rounded-lg px-4 py-2 text-sm font-medium text-gray-600 transition-all duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:bg-gray-100 hover:text-gray-900 active:scale-[0.97] dark:text-gray-300 dark:hover:bg-zinc-800 dark:hover:text-white"
+                            @mousedown="onButtonPress"
                         >
                             Labels
                         </Link>
                     </nav>
 
-                    <!-- Mobile Menu Button -->
+                    <!-- User Menu Desktop dengan VueUse onClickOutside -->
+                    <div class="hidden items-center gap-3 md:flex">
+                        <div v-if="user" ref="userMenuRef" class="relative">
+                            <button
+                                type="button"
+                                class="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-gray-600 transition-all duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:bg-gray-100 active:scale-[0.97] dark:text-gray-300 dark:hover:bg-zinc-800"
+                                @click="handleUserMenuToggle"
+                            >
+                                <div
+                                    class="flex h-8 w-8 items-center justify-center rounded-full bg-gray-200 transition-transform duration-200 active:scale-95 dark:bg-zinc-700"
+                                >
+                                    <User class="h-4 w-4 text-gray-600 dark:text-gray-300" :stroke-width="2" />
+                                </div>
+                                <span>{{ user.np }}</span>
+                            </button>
+
+                            <!-- User Dropdown dengan Spring Animation -->
+                            <Transition
+                                enter-active-class="transition-all duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
+                                enter-from-class="opacity-0 scale-95 -translate-y-2"
+                                enter-to-class="opacity-100 scale-100 translate-y-0"
+                                leave-active-class="transition-all duration-150 ease-in"
+                                leave-from-class="opacity-100 scale-100 translate-y-0"
+                                leave-to-class="opacity-0 scale-95 -translate-y-2"
+                            >
+                                <div
+                                    v-if="isUserMenuOpen"
+                                    class="absolute right-0 mt-2 w-48 origin-top-right rounded-xl border border-gray-200/50 bg-white/95 p-1 shadow-lg backdrop-blur-xl dark:border-zinc-700/50 dark:bg-zinc-800/95"
+                                >
+                                    <div class="border-b border-gray-200/50 px-3 py-2 dark:border-zinc-700/50">
+                                        <p class="text-sm font-medium text-gray-900 dark:text-white">{{ user.np }}</p>
+                                        <p class="text-xs text-gray-500 capitalize dark:text-gray-400">
+                                            {{ user.role }}
+                                        </p>
+                                    </div>
+                                    <button
+                                        type="button"
+                                        class="mt-1 flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-red-600 transition-all duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:bg-red-50 active:scale-[0.98] dark:text-red-400 dark:hover:bg-red-900/20"
+                                        :disabled="logoutForm.processing"
+                                        @click="handleLogout"
+                                    >
+                                        <LogOut class="h-4 w-4" :stroke-width="2" />
+                                        {{ logoutForm.processing ? 'Keluar...' : 'Keluar' }}
+                                    </button>
+                                </div>
+                            </Transition>
+                        </div>
+                        <Link
+                            v-else
+                            href="/login"
+                            class="rounded-lg bg-blue-500 px-4 py-2 text-sm font-medium text-white transition-all duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:bg-blue-600 active:scale-[0.97]"
+                            @mousedown="onButtonPress"
+                        >
+                            Masuk
+                        </Link>
+                    </div>
+
+                    <!-- Mobile Menu Button dengan Spring Animation -->
                     <button
                         type="button"
-                        class="rounded-lg p-2 text-gray-500 transition-all duration-200 hover:bg-gray-100 active:scale-[0.97] md:hidden dark:text-gray-400 dark:hover:bg-zinc-800"
-                        @click="toggleMobileMenu"
+                        class="rounded-lg p-2 text-gray-500 transition-all duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:bg-gray-100 active:scale-[0.97] md:hidden dark:text-gray-400 dark:hover:bg-zinc-800"
+                        @click="handleMobileMenuToggle"
                     >
-                        <Menu v-if="!isMobileMenuOpen" class="h-6 w-6" :stroke-width="2" />
-                        <X v-else class="h-6 w-6" :stroke-width="2" />
+                        <Transition
+                            mode="out-in"
+                            enter-active-class="transition-all duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)]"
+                            enter-from-class="opacity-0 scale-75 rotate-90"
+                            enter-to-class="opacity-100 scale-100 rotate-0"
+                            leave-active-class="transition-all duration-150"
+                            leave-from-class="opacity-100 scale-100 rotate-0"
+                            leave-to-class="opacity-0 scale-75 -rotate-90"
+                        >
+                            <Menu v-if="!isMobileMenuOpen" class="h-6 w-6" :stroke-width="2" />
+                            <X v-else class="h-6 w-6" :stroke-width="2" />
+                        </Transition>
                     </button>
                 </div>
             </div>
@@ -121,31 +271,71 @@ const currentYear = computed(() => new Date().getFullYear());
                     v-if="isMobileMenuOpen"
                     class="border-t border-gray-200/50 bg-white/95 px-4 py-3 backdrop-blur-xl md:hidden dark:border-zinc-700/50 dark:bg-zinc-900/95"
                 >
+                    <!-- User Info Mobile -->
+                    <div v-if="user" class="mb-3 border-b border-gray-200/50 pb-3 dark:border-zinc-700/50">
+                        <div class="flex items-center gap-3">
+                            <div
+                                class="flex h-10 w-10 items-center justify-center rounded-full bg-gray-200 dark:bg-zinc-700"
+                            >
+                                <User class="h-5 w-5 text-gray-600 dark:text-gray-300" :stroke-width="2" />
+                            </div>
+                            <div>
+                                <p class="font-medium text-gray-900 dark:text-white">{{ user.np }}</p>
+                                <p class="text-sm text-gray-500 capitalize dark:text-gray-400">{{ user.role }}</p>
+                            </div>
+                        </div>
+                    </div>
+
                     <nav class="flex flex-col gap-1">
                         <Link
                             href="/"
-                            class="rounded-lg px-4 py-3 text-sm font-medium text-gray-600 transition-all duration-200 hover:bg-gray-100 active:scale-[0.98] dark:text-gray-300 dark:hover:bg-zinc-800"
+                            class="rounded-lg px-4 py-3 text-sm font-medium text-gray-600 transition-all duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:bg-gray-100 active:scale-[0.98] dark:text-gray-300 dark:hover:bg-zinc-800"
+                            @mousedown="onButtonPress"
                         >
                             Dashboard
                         </Link>
                         <Link
                             href="/"
-                            class="rounded-lg px-4 py-3 text-sm font-medium text-gray-600 transition-all duration-200 hover:bg-gray-100 active:scale-[0.98] dark:text-gray-300 dark:hover:bg-zinc-800"
+                            class="rounded-lg px-4 py-3 text-sm font-medium text-gray-600 transition-all duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:bg-gray-100 active:scale-[0.98] dark:text-gray-300 dark:hover:bg-zinc-800"
+                            @mousedown="onButtonPress"
                         >
                             Orders
                         </Link>
                         <Link
                             href="/"
-                            class="rounded-lg px-4 py-3 text-sm font-medium text-gray-600 transition-all duration-200 hover:bg-gray-100 active:scale-[0.98] dark:text-gray-300 dark:hover:bg-zinc-800"
+                            class="rounded-lg px-4 py-3 text-sm font-medium text-gray-600 transition-all duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:bg-gray-100 active:scale-[0.98] dark:text-gray-300 dark:hover:bg-zinc-800"
+                            @mousedown="onButtonPress"
                         >
                             Labels
+                        </Link>
+
+                        <!-- Logout Button Mobile -->
+                        <button
+                            v-if="user"
+                            type="button"
+                            class="mt-2 flex items-center gap-2 rounded-lg border-t border-gray-200/50 px-4 py-3 text-sm font-medium text-red-600 transition-all duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:bg-red-50 active:scale-[0.98] dark:border-zinc-700/50 dark:text-red-400 dark:hover:bg-red-900/20"
+                            :disabled="logoutForm.processing"
+                            @click="handleLogout"
+                        >
+                            <LogOut class="h-4 w-4" :stroke-width="2" />
+                            {{ logoutForm.processing ? 'Keluar...' : 'Keluar' }}
+                        </button>
+
+                        <!-- Login Link Mobile -->
+                        <Link
+                            v-else
+                            href="/login"
+                            class="mt-2 rounded-lg bg-blue-500 px-4 py-3 text-center text-sm font-medium text-white transition-all duration-200 ease-[cubic-bezier(0.34,1.56,0.64,1)] hover:bg-blue-600 active:scale-[0.98]"
+                            @mousedown="onButtonPress"
+                        >
+                            Masuk
                         </Link>
                     </nav>
                 </div>
             </Transition>
         </header>
 
-        <!-- Main Content Area dengan Staggered Animation -->
+        <!-- Main Content Area -->
         <main :class="[showHeader ? 'pt-16' : '', showFooter ? 'pb-20' : '', 'min-h-screen']">
             <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
                 <slot />
@@ -168,28 +358,3 @@ const currentYear = computed(() => new Date().getFullYear());
         </footer>
     </div>
 </template>
-
-<style scoped>
-/**
- * Custom animation untuk spring physics effect
- * yang memberikan feel native iOS
- */
-@keyframes spring-bounce {
-    0% {
-        transform: scale(0.95);
-        opacity: 0;
-    }
-    50% {
-        transform: scale(1.02);
-    }
-    100% {
-        transform: scale(1);
-        opacity: 1;
-    }
-}
-
-.spring-enter {
-    animation: spring-bounce 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-</style>
-
